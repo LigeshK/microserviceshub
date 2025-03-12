@@ -1,0 +1,39 @@
+﻿
+namespace Catalog.API.Products.UpdateProduct;
+
+//CQRS - Command Record type for update product
+public record UpdateProductCommand(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price)
+    : ICommand<UpdateProductResult>;
+//Record type for result
+public record UpdateProductResult(bool IsSuccess);
+/// <summary>
+/// Update Product
+/// </summary>
+/// <param name="session">Interact with Postgres database - dependency injection via Marten library</param>
+internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger) :
+    ICommandHandler<UpdateProductCommand, UpdateProductResult>
+{
+    /// <summary>
+    /// Update product - get the right product via Marten- IDocumentSession from Postgres database and update the data
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ProductNotFoundException"></exception>
+    public async Task<UpdateProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Update product {@command}", command);
+        var product = await session.LoadAsync<Product>(command.Id, cancellationToken) ?? throw new ProductNotFoundException();
+        product.Name = command.Name;
+        product.Category = command.Category;
+        product.Description = command.Description;
+        product.ImageFile = command.ImageFile;
+        product.Price = command.Price;
+
+        session.Update(product);
+        await session.SaveChangesAsync(cancellationToken);
+        return new UpdateProductResult(true);
+
+    }
+}
+

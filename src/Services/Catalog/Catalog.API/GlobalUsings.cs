@@ -1,4 +1,5 @@
-﻿global using Carter;
+﻿//Common class for declaring all common using statements
+global using Carter;
 global using Mapster;
 global using MediatR;
 global using BuildingBlocks.CQRS;
