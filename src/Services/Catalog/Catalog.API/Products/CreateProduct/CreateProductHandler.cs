@@ -1,11 +1,10 @@
-﻿using Catalog.API.Products.UpdateProduct;
-
-namespace Catalog.API.Products.CreateProduct;
+﻿namespace Catalog.API.Products.CreateProduct;
 
 public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price)
     : ICommand<CreateProductResult>;
 public record CreateProductResult(Guid Id);
-internal class CreateProductCommandHandler(IDocumentSession session, ILogger<CreateProductCommandHandler> logger) : ICommandHandler<CreateProductCommand, CreateProductResult>
+internal class CreateProductCommandHandler(IDocumentSession session, ILogger<CreateProductCommandHandler> logger) :
+    ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     /// <summary>
     /// Add product - via Marten- IDocumentSession to the Postgres database and return its Id

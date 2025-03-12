@@ -1,7 +1,4 @@
-﻿
-using Catalog.API.Products.CreateProduct;
-
-namespace Catalog.API.Products.UpdateProduct;
+﻿namespace Catalog.API.Products.UpdateProduct;
 //Record types for input and output - Update Products
 public record UpdateProductRequest(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price);
 public record UpdateProductResponse(bool IsSuccess);
@@ -24,11 +21,11 @@ public class UpdateProductEndpoint : ICarterModule
             return Results.Ok(response);
         })
             .WithName("UpdateProduct")
-            .Produces<CreateProductResponse>(StatusCodes.Status200OK)
+            .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Update Product")
-            .WithDescription("Update Product"); ;
+            .WithDescription("Update Product");
     }
 }
 
