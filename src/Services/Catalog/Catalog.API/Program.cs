@@ -1,11 +1,20 @@
+using BuildingBlocks.Behaviors;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Add Services
-builder.Services.AddCarter();
+
+//Register Mediatr and add all pipeline behaviors into it.
+var assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    config.RegisterServicesFromAssembly(assembly);
+
+    //Add validator behavior as pipeline behavior
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
+builder.Services.AddValidatorsFromAssembly(assembly);
+builder.Services.AddCarter();
 builder.Services.AddMarten(options =>
 {
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
