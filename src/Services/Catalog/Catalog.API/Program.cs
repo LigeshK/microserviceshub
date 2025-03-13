@@ -10,6 +10,7 @@ builder.Services.AddMediatR(config =>
 
     //Add validator behavior as pipeline behavior
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddCarter();

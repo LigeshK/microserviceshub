@@ -15,7 +15,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
         RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price need to be greater than 0");
     }
 }
-internal class CreateProductCommandHandler(IDocumentSession session,ILogger<CreateProductCommandHandler> logger) :
+internal class CreateProductCommandHandler(IDocumentSession session) :
     ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     /// <summary>
@@ -27,8 +27,6 @@ internal class CreateProductCommandHandler(IDocumentSession session,ILogger<Crea
     /// <exception cref="ProductNotFoundException"></exception>
     public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Add product {@command}", command);
-
         //Create product entity
         var product = new Product
         {
