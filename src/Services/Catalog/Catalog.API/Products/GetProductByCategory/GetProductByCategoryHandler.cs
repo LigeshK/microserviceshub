@@ -9,7 +9,7 @@ internal class GetProductByCategoryQueryHandler(IDocumentSession session, ILogge
     {
         logger.LogInformation("Get product by category {@Query}", query);
         var products = await session.Query<Product>().Where(p => p.Category.Contains(query.Category)).ToListAsync(token: cancellationToken);
-        return products is null ? throw new ProductNotFoundException() : new GetProductByCategoryResult(products);
+        return products is null ? throw new NotFoundException("No data found") : new GetProductByCategoryResult(products);
     }
 }
 
