@@ -41,7 +41,7 @@ app.MapCarter();
 //Empty options indicates that we rely on custom config handler - catches all unhandled exceptions and typically returns the generic error
 app.UseExceptionHandler(options => { });
 
-//add healthcheck
+//add healthcheck with UI
 app.UseHealthChecks("/health",
     new HealthCheckOptions
     {
