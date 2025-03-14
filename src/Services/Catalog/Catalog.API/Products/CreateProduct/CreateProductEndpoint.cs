@@ -11,7 +11,7 @@ public class CreateProductEndpoint : ICarterModule
         {
             var command = request.Adapt<CreateProductCommand>();
             var result = await sender.Send(command);
-            var response = request.Adapt<CreateProductResponse>();
+            var response = result.Adapt<CreateProductResponse>();
             return Results.Created($"/products/{response.Id}", response);
 
         })
