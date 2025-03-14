@@ -1,3 +1,7 @@
+
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Add Services
@@ -19,8 +23,16 @@ builder.Services.AddMarten(options =>
     options.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
 
+//Seed data - first time in Development environment
+if (builder.Environment.IsDevelopment())
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+
 //Register Global custom exception handler 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+//Register healthcheck for Postgres database from catalog api
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
 var app = builder.Build();
 
@@ -29,4 +41,10 @@ app.MapCarter();
 //Empty options indicates that we rely on custom config handler - catches all unhandled exceptions and typically returns the generic error
 app.UseExceptionHandler(options => { });
 
+//add healthcheck
+app.UseHealthChecks("/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
 app.Run();
