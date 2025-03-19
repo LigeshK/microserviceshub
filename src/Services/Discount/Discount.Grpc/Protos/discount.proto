@@ -1,0 +1,41 @@
+﻿//Syntax definition
+syntax = "proto3";
+
+//Define namespace with option keyword
+option csharp_namespace = "Discount.Grpc";
+
+//Package name
+package discount;
+
+//Service definition - Grpc Service - The discount  - RPC functions for CRUD operations
+service DiscountProtoService{
+	// The discount CRUD operations with Sqllite DB
+	rpc GetDiscount(GetDiscountRequest) returns (CouponModel);
+	rpc CreateDiscount(CreateDiscountRequest) returns (CouponModel);
+	rpc UpdateDiscount(UpdateDiscountRequest) returns (CouponModel);
+	rpc DeleteDiscount(DeleteDiscountRequest) returns (DeleteDiscountResponse);
+}
+
+//Define the request objects
+message GetDiscountRequest{
+	string ProductName = 1;
+}
+//Generic coupon response model with attributes and order
+message CouponModel{
+	int32 id = 1;
+	string productName = 2;
+	string description = 3;
+	int32 amount = 4;
+}
+message CreateDiscountRequest{
+	CouponModel coupon = 1;
+}
+message UpdateDiscountRequest{
+	CouponModel coupon = 1;
+}
+message DeleteDiscountRequest {
+	string productName = 1;
+}
+message DeleteDiscountResponse {
+	bool success = 1;
+}
